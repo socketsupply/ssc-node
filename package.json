@@ -1,5 +1,5 @@
 {
-  "name": "opkit-api-node",
+  "name": "@optoolco/opkit-node",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,12 +8,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/optoolco/opkit-api-node.git"
+    "url": "git+https://github.com/optoolco/opkit-node.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/optoolco/opkit-api-node/issues"
+    "url": "https://github.com/optoolco/opkit-node/issues"
   },
-  "homepage": "https://github.com/optoolco/opkit-api-node#readme"
+  "homepage": "https://github.com/optoolco/opkit-node#readme"
 }
