@@ -82,10 +82,10 @@ ipc.send = o => {
     value
   }).toString()
 
-  const err = exceedsMaxSize(s)
+  const errMsg = exceedsMaxSize(s)
 
-  if (err) {
-    // result = err
+  if (errMsg) {
+    throw new Error(errMsg)
   }
 
   write(`ipc://send?${s}`)
