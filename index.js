@@ -122,8 +122,8 @@ process.stdin.on('data', async data => {
       value = JSON.parse(decodeURIComponent(o.value))
     }
   } catch (err) {
-    console.log(`Unable to parse message (${data})`)
-    return
+    console.log(`Unable to parse stdin message (${data})`)
+    throw err
   }
 
   if (cmd === 'resolve') {
