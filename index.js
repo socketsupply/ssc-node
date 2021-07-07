@@ -72,13 +72,7 @@ ipc.request = (cmd, opts) => {
 }
 
 ipc.send = o => {
-  let value = ''
-
-  try {
-    value = JSON.stringify(o.value)
-  } catch (err) {
-    throw new Error(err.message)
-  }
+  const value = JSON.stringify(o.value)
 
   if (!value || !value.trim()) return
 
