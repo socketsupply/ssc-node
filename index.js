@@ -1,12 +1,13 @@
 const util = require('util')
 const fs = require('fs')
 
+// eslint-disable-next-line
 function installWebView () {
   //
   // this will go away in the near future. WebView2 is a new feature
   // and we want to be sure the user has it, if they don't, download
   // and install it for them.
-  //`
+  //
 
   // fetch('https://go.microsoft.com/fwlink/p/?LinkId=2124703')
 }
@@ -30,23 +31,24 @@ ipc.resolve = async (seq, state, value) => {
   const method = !Number(state) ? 'resolve' : 'reject'
   if (!ipc[seq] || !ipc[seq][method]) return
 
+  /**
+   * TODO Who handles this error ?
+   */
   try {
     await ipc[seq][method](value)
-  } catch (err) {
-    return Promise.reject(err.message)
+  } finally {
+    delete ipc[seq]
   }
-
-  delete ipc[seq];
 }
 
 ipc.request = (cmd, opts) => {
   const seq = ipc.nextSeq++
-  let value = '0'
+  let value = ''
 
   const promise = new Promise((resolve, reject) => {
     ipc[seq] = {
       resolve: resolve,
-      reject: reject,
+      reject: reject
     }
   })
 
@@ -61,8 +63,8 @@ ipc.request = (cmd, opts) => {
       value: opts.value || '0'
     }).toString()
   } catch (err) {
-    console.error(`${err.message} (${value})`)
-    return Promise.reject(err.message)
+    console.error(`Cannot encode request ${err.message} (${value})`)
+    return Promise.reject(err)
   }
 
   write(`ipc://${cmd}?${value}`)
@@ -70,13 +72,7 @@ ipc.request = (cmd, opts) => {
 }
 
 ipc.send = o => {
-  let value = ''
-
-  try {
-    value = JSON.stringify(o.value)
-  } catch (err) {
-    throw new Error(err.message)
-  }
+  const value = JSON.stringify(o.value)
 
   if (!value || !value.trim()) return
 
@@ -86,16 +82,16 @@ ipc.send = o => {
     value
   }).toString()
 
-  const err = exceedsMaxSize(s)
+  const errMsg = exceedsMaxSize(s)
 
-  if (err) {
-    result = err
+  if (errMsg) {
+    throw new Error(errMsg)
   }
 
-  return write(`ipc://send?${s}`)
+  write(`ipc://send?${s}`)
 }
 
-const exceedsMaxSize = (s = "") => {
+const exceedsMaxSize = (s = '') => {
   if (s.length > 8000) {
     return [
       'Unable to accept payload. Max ipc payload size reached (Exceeds',
@@ -126,27 +122,45 @@ process.stdin.on('data', async data => {
       value = JSON.parse(decodeURIComponent(o.value))
     }
   } catch (err) {
-    console.log(`Unable to parse message (${data})`)
-    return
+    console.log(`Unable to parse stdin message (${data})`)
+    throw err
   }
 
   if (cmd === 'resolve') {
     return ipc.resolve(seq, state, value) // being asked to resolve a promise
   }
 
+  let resultObj
   let result = ''
 
   try {
-    result = JSON.stringify(await api.receive(cmd, value));
+    resultObj = await api.receive(cmd, value)
   } catch (err) {
-    result = err.message
+    resultObj = {
+      err: { message: err.message }
+    }
     state = 1
   }
 
-  const err = exceedsMaxSize(result)
-  if (err) {
+  if (resultObj === undefined) {
+    resultObj = null
+  }
+
+  try {
+    result = JSON.stringify(resultObj)
+  } catch (err) {
     state = 1
-    result = err
+    result = JSON.stringify({
+      err: { message: err.message }
+    })
+  }
+
+  const errMsg = exceedsMaxSize(result)
+  if (errMsg) {
+    state = 1
+    result = JSON.stringify({
+      err: { message: errMsg }
+    })
   }
 
   const s = new URLSearchParams({
@@ -154,7 +168,7 @@ process.stdin.on('data', async data => {
     state,
     index,
     value: result
-  }).toString();
+  }).toString()
 
   write(`ipc://resolve?${s}`) // asking to resolve a promise
 })
@@ -177,7 +191,6 @@ api.setMenu = o => ipc.request('menu', o)
 
 api.send = ipc.send
 
-api.receive = () => "Not Implemented!";
+api.receive = () => 'Not Implemented!'
 
 module.exports = api
-
