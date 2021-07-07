@@ -145,7 +145,15 @@ process.stdin.on('data', async data => {
   if (resultObj === undefined) {
     resultObj = null
   }
-  result = JSON.stringify(resultObj)
+
+  try {
+    result = JSON.stringify(resultObj)
+  } catch (err) {
+    state = 1
+    result = JSON.stringify({
+      err: { message: err.message }
+    })
+  }
 
   const errMsg = exceedsMaxSize(result)
   if (errMsg) {
