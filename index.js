@@ -130,19 +130,29 @@ process.stdin.on('data', async data => {
     return ipc.resolve(seq, state, value) // being asked to resolve a promise
   }
 
+  let resultObj
   let result = ''
 
   try {
-    result = JSON.stringify(await api.receive(cmd, value))
+    resultObj = await api.receive(cmd, value)
   } catch (err) {
-    result = err.message
+    resultObj = {
+      err: { message: err.message }
+    }
     state = 1
   }
 
-  const err = exceedsMaxSize(result)
-  if (err) {
+  if (resultObj === undefined) {
+    resultObj = null
+  }
+  result = JSON.stringify(resultObj)
+
+  const errMsg = exceedsMaxSize(result)
+  if (errMsg) {
     state = 1
-    result = err
+    result = JSON.stringify({
+      err: { message: errMsg }
+    })
   }
 
   const s = new URLSearchParams({
