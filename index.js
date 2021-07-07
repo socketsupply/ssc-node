@@ -43,7 +43,7 @@ ipc.resolve = async (seq, state, value) => {
 
 ipc.request = (cmd, opts) => {
   const seq = ipc.nextSeq++
-  let value = '0'
+  let value = ''
 
   const promise = new Promise((resolve, reject) => {
     ipc[seq] = {
@@ -63,8 +63,8 @@ ipc.request = (cmd, opts) => {
       value: opts.value || '0'
     }).toString()
   } catch (err) {
-    console.error(`${err.message} (${value})`)
-    return Promise.reject(err.message)
+    console.error(`Cannot encode request ${err.message} (${value})`)
+    return Promise.reject(err)
   }
 
   write(`ipc://${cmd}?${value}`)
