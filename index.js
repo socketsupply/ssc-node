@@ -94,7 +94,7 @@ ipc.send = o => {
     // result = err
   }
 
-  return write(`ipc://send?${s}`)
+  write(`ipc://send?${s}`)
 }
 
 const exceedsMaxSize = (s = '') => {
