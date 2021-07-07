@@ -1,12 +1,13 @@
 const util = require('util')
 const fs = require('fs')
 
+// eslint-disable-next-line
 function installWebView () {
   //
   // this will go away in the near future. WebView2 is a new feature
   // and we want to be sure the user has it, if they don't, download
   // and install it for them.
-  //`
+  //
 
   // fetch('https://go.microsoft.com/fwlink/p/?LinkId=2124703')
 }
@@ -36,7 +37,7 @@ ipc.resolve = async (seq, state, value) => {
     return Promise.reject(err.message)
   }
 
-  delete ipc[seq];
+  delete ipc[seq]
 }
 
 ipc.request = (cmd, opts) => {
@@ -46,7 +47,7 @@ ipc.request = (cmd, opts) => {
   const promise = new Promise((resolve, reject) => {
     ipc[seq] = {
       resolve: resolve,
-      reject: reject,
+      reject: reject
     }
   })
 
@@ -89,13 +90,13 @@ ipc.send = o => {
   const err = exceedsMaxSize(s)
 
   if (err) {
-    result = err
+    // result = err
   }
 
   return write(`ipc://send?${s}`)
 }
 
-const exceedsMaxSize = (s = "") => {
+const exceedsMaxSize = (s = '') => {
   if (s.length > 8000) {
     return [
       'Unable to accept payload. Max ipc payload size reached (Exceeds',
@@ -137,7 +138,7 @@ process.stdin.on('data', async data => {
   let result = ''
 
   try {
-    result = JSON.stringify(await api.receive(cmd, value));
+    result = JSON.stringify(await api.receive(cmd, value))
   } catch (err) {
     result = err.message
     state = 1
@@ -154,7 +155,7 @@ process.stdin.on('data', async data => {
     state,
     index,
     value: result
-  }).toString();
+  }).toString()
 
   write(`ipc://resolve?${s}`) // asking to resolve a promise
 })
@@ -177,7 +178,6 @@ api.setMenu = o => ipc.request('menu', o)
 
 api.send = ipc.send
 
-api.receive = () => "Not Implemented!";
+api.receive = () => 'Not Implemented!'
 
 module.exports = api
-
