@@ -31,13 +31,14 @@ ipc.resolve = async (seq, state, value) => {
   const method = !Number(state) ? 'resolve' : 'reject'
   if (!ipc[seq] || !ipc[seq][method]) return
 
+  /**
+   * TODO Who handles this error ?
+   */
   try {
     await ipc[seq][method](value)
-  } catch (err) {
-    return Promise.reject(err.message)
+  } finally {
+    delete ipc[seq]
   }
-
-  delete ipc[seq]
 }
 
 ipc.request = (cmd, opts) => {
