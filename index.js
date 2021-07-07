@@ -1,5 +1,5 @@
-import util from 'util'
-import fs from 'fs'
+const util = require('util')
+const fs = require('fs')
 
 function installWebView () {
   //
@@ -179,5 +179,5 @@ api.send = ipc.send
 
 api.receive = () => "Not Implemented!";
 
-export default api
+module.exports = api
 
