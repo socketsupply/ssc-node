@@ -82,22 +82,7 @@ ipc.send = o => {
     value
   }).toString()
 
-  const errMsg = exceedsMaxSize(s)
-
-  if (errMsg) {
-    throw new Error(errMsg)
-  }
-
   write(`ipc://send?${s}`)
-}
-
-const exceedsMaxSize = (s = '') => {
-  if (s.length > 8000) {
-    return [
-      'Unable to accept payload. Max ipc payload size reached (Exceeds',
-      'JSStringGetMaximumUTF8CStringSize), consider streaming.'
-    ].join(' ')
-  }
 }
 
 process.stdin.resume()
@@ -152,14 +137,6 @@ process.stdin.on('data', async data => {
     state = 1
     result = JSON.stringify({
       err: { message: err.message }
-    })
-  }
-
-  const errMsg = exceedsMaxSize(result)
-  if (errMsg) {
-    state = 1
-    result = JSON.stringify({
-      err: { message: errMsg }
     })
   }
 
