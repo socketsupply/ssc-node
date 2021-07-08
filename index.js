@@ -1,5 +1,4 @@
 const util = require('util')
-const fs = require('fs')
 
 // eslint-disable-next-line
 function installWebView () {
@@ -13,8 +12,7 @@ function installWebView () {
 }
 
 const write = s => {
-  process.stdout.write(s + '\0')
-  fs.appendFileSync('log.txt', s + '\r\n')
+  process.stdout.write(s + '\n')
 }
 
 console.log = (...args) => {
@@ -162,7 +160,7 @@ api.navigate = o => ipc.request('navigate', o)
 
 api.setTitle = o => ipc.request('title', o)
 
-api.setSize = o => ipc.request('sizse', o)
+api.setSize = o => ipc.request('size', o)
 
 api.setMenu = o => ipc.request('menu', o)
 
