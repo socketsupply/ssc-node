@@ -56,6 +56,7 @@ ipc.request = (cmd, opts) => {
     }
 
     value = new URLSearchParams({
+      ...opts,
       index: opts.window,
       seq,
       value: opts.value || '0'
