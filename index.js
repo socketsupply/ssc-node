@@ -71,14 +71,18 @@ ipc.request = (cmd, opts) => {
 }
 
 ipc.send = o => {
-  const value = JSON.stringify(o.value)
+  o = JSON.parse(JSON.stringify(o))
 
-  if (!value || !value.trim()) return
+  if (typeof o.value === 'object') {
+    o.value = JSON.stringify(o.value)
+  }
+
+  if (!o.value || !o.value.trim()) return
 
   const s = new URLSearchParams({
     event: o.event,
     index: o.index,
-    value
+    value: o.value
   }).toString()
 
   write(`ipc://send?${s}`)
