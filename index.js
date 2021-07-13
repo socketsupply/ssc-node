@@ -1,3 +1,6 @@
+// @ts-check
+'use strict'
+
 const util = require('util')
 
 // eslint-disable-next-line
@@ -157,20 +160,63 @@ process.stdin.on('data', async data => {
 // Exported API
 // ---
 //
-const api = {}
+const api = {
+  /**
+   * @param {{ window: number }} o
+   */
+  show (o) {
+    return ipc.request('show', o)
+  },
 
-api.show = o => ipc.request('show', o)
+  /**
+   * @param {{ window: number, value: string }} o
+   */
+  navigate (o) {
+    return ipc.request('navigate', o)
+  },
 
-api.navigate = o => ipc.request('navigate', o)
+  /**
+   * @param {{ window: number, value: string }} o
+   */
+  setTitle (o) {
+    return ipc.request('setTitle', o)
+  },
 
-api.setTitle = o => ipc.request('title', o)
+  /**
+   * @param {{ window: number, height: number, width: number }} o
+   */
+  setSize (o) {
+    return ipc.request('setSize', o)
+  },
 
-api.setSize = o => ipc.request('size', o)
+  /**
+   * @param {{ window: number, value: string }} o
+   */
+  setMenu (o) {
+    return ipc.request('setMenu', o)
+  },
 
-api.setMenu = o => ipc.request('menu', o)
+  /**
+   * @param {{ window: number, value: string }} o
+   */
+  openExternal (o) {
+    return ipc.request('external', o)
+  },
 
-api.send = ipc.send
+  /**
+   * @param {{ window: number, event: string, value: any }} o
+   */
+  send (o) {
+    return ipc.send(o)
+  },
 
-api.receive = () => 'Not Implemented!'
+  /**
+   * @param {any} o
+   */
+  receive (o) {
+    console.error('Receive Not Implemented', o)
+    return { err: new Error('Not Implemented!') }
+  }
+}
 
 module.exports = api
