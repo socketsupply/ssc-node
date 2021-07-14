@@ -19,7 +19,9 @@ const write = s => {
     throw new Error('invalid write()')
   }
 
-  process.stdout.write(s + '\n')
+  return new Promise(resolve => 
+    process.stdout.write(s + '\n', resolve)
+  )
 }
 
 console.log = (...args) => {
@@ -48,7 +50,7 @@ ipc.resolve = async (seq, state, value) => {
   }
 }
 
-ipc.request = (cmd, opts) => {
+ipc.request = async (cmd, opts) => {
   const seq = ipc.nextSeq++
   let value = ''
 
@@ -75,11 +77,11 @@ ipc.request = (cmd, opts) => {
     return Promise.reject(err)
   }
 
-  write(`ipc://${cmd}?${value}`)
+  await write(`ipc://${cmd}?${value}`)
   return promise
 }
 
-ipc.send = o => {
+ipc.send = async o => {
   o = JSON.parse(JSON.stringify(o))
 
   if (typeof o.value === 'object') {
@@ -94,7 +96,7 @@ ipc.send = o => {
     value: o.value
   }).toString()
 
-  write(`ipc://send?${s}`)
+  await write(`ipc://send?${s}`)
 }
 
 process.stdin.resume()
@@ -179,7 +181,7 @@ process.stdin.on('data', async (/** @type {string} */ data) => {
     value: result
   }).toString()
 
-  write(`ipc://resolve?${s}`) // asking to resolve a promise
+  await write(`ipc://resolve?${s}`) // asking to resolve a promise
 })
 
 //
