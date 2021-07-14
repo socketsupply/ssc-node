@@ -179,21 +179,21 @@ const api = {
    * @param {{ window: number, value: string }} o
    */
   setTitle (o) {
-    return ipc.request('setTitle', o)
+    return ipc.request('title', o)
   },
 
   /**
    * @param {{ window: number, height: number, width: number }} o
    */
   setSize (o) {
-    return ipc.request('setSize', o)
+    return ipc.request('size', o)
   },
 
   /**
    * @param {{ window: number, value: string }} o
    */
   setMenu (o) {
-    return ipc.request('setMenu', o)
+    return ipc.request('menu', o)
   },
 
   /**
