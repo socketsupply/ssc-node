@@ -19,7 +19,7 @@ const write = s => {
     throw new Error('invalid write()')
   }
 
-  return new Promise(resolve => 
+  return new Promise(resolve =>
     process.stdout.write(s + '\n', resolve)
   )
 }
@@ -215,6 +215,13 @@ const api = {
    */
   setSize (o) {
     return ipc.request('size', o)
+  },
+
+  /**
+   * @param {{ window: number }} o
+   */
+  exit (o) {
+    return ipc.request('exit', o)
   },
 
   /**
