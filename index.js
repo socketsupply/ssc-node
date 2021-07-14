@@ -15,12 +15,18 @@ function installWebView () {
 }
 
 const write = s => {
+  if (s.includes('\n')) {
+    throw new Error('invalid write()')
+  }
+
   process.stdout.write(s + '\n')
 }
 
 console.log = (...args) => {
   const s = args.map(v => util.format(v)).join(' ')
-  write(`ipc://stdout?value=${encodeURIComponent(s)}`)
+  const enc = encodeURIComponent(s)
+  // console.error('flushing ipc://stdout', enc.includes('\n'))
+  write(`ipc://stdout?value=${enc}`)
 }
 
 //
@@ -94,12 +100,29 @@ ipc.send = o => {
 process.stdin.resume()
 process.stdin.setEncoding('utf8')
 
-process.stdin.on('data', async data => {
+let buf = ''
+
+process.stdin.on('data', async (/** @type {string} */ data) => {
   let cmd = ''
   let index = 0
   let seq = 0
   let state = 0
   let value = ''
+
+  // console.log('incoming bytes1', data.slice(0, 20), data.includes('\n'))
+  // console.log('incoming bytes2', data.slice(0, 20), data.includes('\n'))
+
+  const newLineIndex = data.indexOf('\n')
+  if (newLineIndex === -1) {
+    buf += data
+    return
+  } else {
+    const oldData = data.slice(newLineIndex)
+    data = buf + data.slice(0, newLineIndex)
+    buf = oldData
+
+    // console.log('reset buf', buf.slice(0, 10))
+  }
 
   try {
     const u = new URL(data)
@@ -113,8 +136,11 @@ process.stdin.on('data', async data => {
       value = JSON.parse(decodeURIComponent(o.value))
     }
   } catch (err) {
-    console.log(`Unable to parse stdin message (${data})`)
-    throw err
+    const dataStart = data.slice(0, 100)
+    const dataEnd = data.slice(data.length - 100)
+
+    console.error(`Unable to parse stdin message ${err.code} ${err.message.slice(0, 100)} (${dataStart}...${dataEnd})`)
+    throw new Error(`Unable to parse stdin message ${err.code} ${err.message.slice(0, 20)}`)
   }
 
   if (cmd === 'resolve') {
