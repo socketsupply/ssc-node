@@ -198,6 +198,13 @@ const api = {
   },
 
   /**
+   * @param {{ window: number }} o
+   */
+  hide (o) {
+    return ipc.request('hide', o)
+  },
+
+  /**
    * @param {{ window: number, value: string }} o
    */
   navigate (o) {
