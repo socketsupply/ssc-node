@@ -30,6 +30,7 @@ console.log = (...args) => {
   // console.error('flushing ipc://stdout', enc.includes('\n'))
   write(`ipc://stdout?value=${enc}`)
 }
+console.error = console.log
 
 //
 // Internal IPC API
