@@ -136,7 +136,7 @@ process.stdin.on('data', async (/** @type {string} */ data) => {
     state = o.state || 0
 
     if (o.value) {
-      value = JSON.parse(decodeURIComponent(o.value))
+      value = JSON.parse(o.value)
     }
   } catch (err) {
     const dataStart = data.slice(0, 100)
