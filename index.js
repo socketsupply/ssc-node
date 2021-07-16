@@ -105,27 +105,32 @@ process.stdin.setEncoding('utf8')
 
 let buf = ''
 
-process.stdin.on('data', async (/** @type {string} */ data) => {
+async function handleMessage (data) {
+  // console.log('incoming bytes1', data.slice(0, 80), data.includes('\n'))
+  // console.log('incoming bytes2', data.slice(0, 20), data.includes('\n'))
+
+  const messages = data.split('\n')
+  if (messages.length === 1) {
+    buf += data
+    return
+  }
+
+  const firstMsg = buf + messages[0]
+  parse(firstMsg)
+
+  for (let i = 1; i < messages.length - 1; i++) {
+    parse(messages[i])
+  }
+
+  buf = messages[messages.length - 1]
+}
+
+async function parse (data) {
   let cmd = ''
   let index = 0
   let seq = 0
   let state = 0
   let value = ''
-
-  // console.log('incoming bytes1', data.slice(0, 20), data.includes('\n'))
-  // console.log('incoming bytes2', data.slice(0, 20), data.includes('\n'))
-
-  const newLineIndex = data.indexOf('\n')
-  if (newLineIndex === -1) {
-    buf += data
-    return
-  } else {
-    const oldData = data.slice(newLineIndex)
-    data = buf + data.slice(0, newLineIndex)
-    buf = oldData
-
-    // console.log('reset buf', buf.slice(0, 10))
-  }
 
   try {
     const u = new URL(data)
@@ -183,7 +188,9 @@ process.stdin.on('data', async (/** @type {string} */ data) => {
   }).toString()
 
   await write(`ipc://resolve?${s}`) // asking to resolve a promise
-})
+}
+
+process.stdin.on('data', handleMessage)
 
 //
 // Exported API
