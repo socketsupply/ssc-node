@@ -27,7 +27,6 @@ const write = s => {
 console.log = (...args) => {
   const s = args.map(v => util.format(v)).join(' ')
   const enc = encodeURIComponent(s)
-  // console.error('flushing ipc://stdout', enc.includes('\n'))
   write(`ipc://stdout?value=${enc}`)
 }
 console.error = console.log
@@ -51,7 +50,7 @@ ipc.resolve = async (seq, state, value) => {
   }
 }
 
-ipc.request = async (cmd, opts = { value: {} }) => {
+ipc.request = async (cmd, opts) => {
   const seq = ipc.nextSeq++
   let value = ''
 
@@ -106,10 +105,8 @@ process.stdin.setEncoding('utf8')
 let buf = ''
 
 async function handleMessage (data) {
-  // console.log('incoming bytes1', data.slice(0, 80), data.includes('\n'))
-  // console.log('incoming bytes2', data.slice(0, 20), data.includes('\n'))
-
   const messages = data.split('\n')
+
   if (messages.length === 1) {
     buf += data
     return
@@ -230,6 +227,10 @@ const api = {
    */
   setSize (o) {
     return ipc.request('size', o)
+  },
+
+  getScreenSize () {
+    return ipc.request('getScreenSize', { value: {} })
   },
 
   /**
