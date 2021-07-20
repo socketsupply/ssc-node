@@ -51,7 +51,7 @@ ipc.resolve = async (seq, state, value) => {
   }
 }
 
-ipc.request = async (cmd, opts) => {
+ipc.request = async (cmd, opts = { value: {} }) => {
   const seq = ipc.nextSeq++
   let value = ''
 
