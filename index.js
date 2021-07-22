@@ -2,17 +2,16 @@
 'use strict'
 
 const util = require('util')
+const stream = require('stream')
+const fs = require('fs')
+const os = require('os')
+const path = require('path')
+const childProcess = require('child_process')
 
-// eslint-disable-next-line
-function installWebView () {
-  //
-  // this will go away in the near future. WebView2 is a new feature
-  // and we want to be sure the user has it, if they don't, download
-  // and install it for them.
-  //
+const fetch = require('node-fetch')
 
-  // fetch('https://go.microsoft.com/fwlink/p/?LinkId=2124703')
-}
+const spawn = util.promisify(childProcess.spawn)
+const pipeline = util.promisify(stream.pipeline)
 
 const write = s => {
   if (s.includes('\n')) {
@@ -27,6 +26,7 @@ const write = s => {
 console.log = (...args) => {
   const s = args.map(v => util.format(v)).join(' ')
   const enc = encodeURIComponent(s)
+  // fs.appendFileSync('tmp.log', s + '\n')
   write(`ipc://stdout?value=${enc}`)
 }
 console.error = console.log
@@ -193,7 +193,7 @@ process.stdin.on('data', handleMessage)
 // Exported API
 // ---
 //
-const api = {
+const system = {
   /**
    * @param {{ window: number }} o
    */
@@ -261,6 +261,10 @@ const api = {
     return ipc.send(o)
   },
 
+  restart () {
+    return ipc.request('restart', {})
+  },
+
   /**
    * @param {any} o
    */
@@ -270,4 +274,42 @@ const api = {
   }
 }
 
-module.exports = api
+module.exports = system
+
+console.log('starting opkit-node', process.argv)
+if (process.argv.includes('--webviewFailed')) {
+  installWebView()
+}
+
+// eslint-disable-next-line
+async function installWebView () {
+  //
+  // this will go away in the near future. WebView2 is a new feature
+  // and we want to be sure the user has it, if they don't, download
+  // and install it for them.
+  //
+
+  console.log('installWebView() fetch()')
+  const res = await fetch('https://go.microsoft.com/fwlink/p/?LinkId=2124703')
+
+  console.log('fetch status', res.status)
+  if (res.status !== 200) {
+    console.log('attempt to alert()')
+    return system.alert({
+      value: 'Could not connect to go.microsoft.com to download required native resources'
+    })
+  }
+
+  const tmpDir = os.tmpdir()
+  const dest = path.join(tmpDir, 'webview-installer.exe')
+
+  console.log('write res.body to tmp', dest)
+  await pipeline(res.body, fs.createWriteStream(dest))
+  console.log('spawn tmp exe', dest)
+  await spawn(dest, [], {
+    stdio: 'inherit'
+  })
+  console.log('spawn yields')
+
+  system.restart()
+}
