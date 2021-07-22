@@ -68,7 +68,7 @@ ipc.request = async (cmd, opts) => {
 
     value = new URLSearchParams({
       ...opts,
-      index: opts.window,
+      index: opts.window || '0',
       seq,
       value: opts.value || '0'
     }).toString()
@@ -193,7 +193,7 @@ process.stdin.on('data', handleMessage)
 // Exported API
 // ---
 //
-const system = {
+const api = {
   /**
    * @param {{ window: number }} o
    */
@@ -262,7 +262,7 @@ const system = {
   },
 
   restart () {
-    return ipc.request('restart', {})
+    return ipc.request('restart', { })
   },
 
   /**
@@ -274,7 +274,7 @@ const system = {
   }
 }
 
-module.exports = system
+module.exports = api
 
 console.log('starting opkit-node', process.argv)
 if (process.argv.includes('--webviewFailed')) {
@@ -295,7 +295,7 @@ async function installWebView () {
   console.log('fetch status', res.status)
   if (res.status !== 200) {
     console.log('attempt to alert()')
-    return system.alert({
+    return api.alert({
       value: 'Could not connect to go.microsoft.com to download required native resources'
     })
   }
@@ -311,5 +311,5 @@ async function installWebView () {
   })
   console.log('spawn yields')
 
-  system.restart()
+  api.restart()
 }
