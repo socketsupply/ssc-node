@@ -72,6 +72,8 @@ ipc.request = async (cmd, opts) => {
       seq,
       value: opts.value || '0'
     }).toString()
+
+    value = value.replace(/\+/g, '%20')
   } catch (err) {
     console.error(`Cannot encode request ${err.message} (${value})`)
     return Promise.reject(err)
@@ -90,11 +92,13 @@ ipc.send = async o => {
 
   if (!o.value || !o.value.trim()) return
 
-  const s = new URLSearchParams({
+  let s = new URLSearchParams({
     event: o.event,
     index: o.index,
     value: o.value
   }).toString()
+
+  s = s.replace(/\+/g, '%20')
 
   await write(`ipc://send?${s}`)
 }
@@ -177,12 +181,14 @@ async function parse (data) {
     })
   }
 
-  const s = new URLSearchParams({
+  let s = new URLSearchParams({
     seq,
     state,
     index,
     value: result
   }).toString()
+
+  s = s.replace(/\+/g, '%20')
 
   await write(`ipc://resolve?${s}`) // asking to resolve a promise
 }
