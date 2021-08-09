@@ -250,6 +250,36 @@ const api = {
    * @param {{ window: number, value: string }} o
    */
   setMenu (o) {
+    // validate the menu
+    if (o.length === 0) {
+      throw new Error('Menu must have length')
+    }
+
+    const menus = o.match(new RegExp('\\w+:\\n', 'g'))
+    const menuTerminals = o.match(new RegExp(';', 'g'))
+    const delta = menus.length - menuTerminals.length
+
+    if ((delta !== 0) && (delta !== -1)) {
+      throw new Error(`Expected ${menuTerminals.length} ';', found ${menus}.`)
+    }
+
+    const lines = o.split('\n')
+    const e = new Error()
+    const frame = e.stack.split("\n")[2]
+    const callerLineNo = frame.split(":").reverse()[1]
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i]
+      const l = callerLineNo + i
+
+      if (line.test(/.*:\n/)) continue // ignore submenu labels
+      if (line.test(/---\s*\n/)) continue // ignore separators
+      if (!line.includes(':')) throw new Error(`Missing label on line ${l}`)
+      if (line.test(/:\s*\+/)) throw new Error(`Missing accelerator line ${l}`)
+      if (line.test(/\+(\n|$)/)) throw new Error(`Missing modifier line ${l}`)
+    }
+
+    // send the request to set the menu
     return ipc.request('menu', o)
   },
 
