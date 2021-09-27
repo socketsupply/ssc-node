@@ -240,7 +240,7 @@ const api = {
   },
 
   /**
-   * @param {{ window: number }} o
+   * @param {{ value: number }} o
    */
   exit (o) {
     return ipc.request('exit', o)
