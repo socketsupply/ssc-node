@@ -94,7 +94,7 @@ ipc.send = async o => {
 
   let s = new URLSearchParams({
     event: o.event,
-    index: o.window,
+    index: o.window || '0',
     value: o.value
   }).toString()
 
@@ -137,9 +137,9 @@ async function parse (data) {
     const u = new URL(data)
     const o = Object.fromEntries(u.searchParams)
     cmd = u.host
-    seq = o.seq
-    index = o.index
-    state = o.state || 0
+    seq = Number(o.seq)
+    index = Number(o.index)
+    state = Number(o.state)
 
     if (o.value) {
       value = JSON.parse(o.value)
