@@ -128,18 +128,18 @@ async function handleMessage (data) {
 
 async function parse (data) {
   let cmd = ''
-  let index = 0
-  let seq = 0
-  let state = 0
+  let index = '0'
+  let seq = '0'
+  let state = '0'
   let value = ''
 
   try {
     const u = new URL(data)
     const o = Object.fromEntries(u.searchParams)
     cmd = u.host
-    seq = Number(o.seq)
-    index = Number(o.index)
-    state = Number(o.state)
+    seq = o.seq
+    index = o.index
+    state = o.state || '0'
 
     if (o.value) {
       value = JSON.parse(o.value)
