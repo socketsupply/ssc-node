@@ -278,8 +278,8 @@ const api = {
 
       if (line.trim().length === 0) continue
       if (/.*:\n/.test(line)) continue // ignore submenu labels
-      if (/---\s*\n/.test(line)) continue // ignore separators
-      if (!line.includes(':')) {
+      if (/---/.test(line)) continue // ignore separators
+      if (/\w+/.test(line) && !line.includes(':')) {
         errMsg = 'Missing label'
       } else if (/:\s*\+/.test(line)) {
         errMsg = 'Missing accelerator'
