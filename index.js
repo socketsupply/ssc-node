@@ -31,6 +31,21 @@ console.log = (...args) => {
 }
 console.error = console.log
 
+process.on('exit', (exitCode) => {
+  const seq = ipc.nextSeq++
+
+  let value = new URLSearchParams({
+    index: '0',
+    seq,
+    value: String(exitCode)
+  }).toString()
+
+  value = value.replace(/\+/g, '%20')
+
+  fs.writeSync(1, `ipc://exit?${value}\n`)
+  fs.fsyncSync(1)
+})
+
 //
 // Internal IPC API
 //

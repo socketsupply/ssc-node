@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/optoolco/opkit-node#readme",
   "devDependencies": {
+    "@types/node": "16.10.2",
     "npm-bin-deps": "1.10.1"
   },
   "binDependencies": {
