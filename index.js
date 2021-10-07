@@ -43,7 +43,12 @@ process.on('exit', (exitCode) => {
   value = value.replace(/\+/g, '%20')
 
   fs.writeSync(1, `ipc://exit?${value}\n`)
-  fs.fsyncSync(1)
+  try {
+    fs.fsyncSync(1)
+  } catch (_) {
+    // fsync(1) can fail in github actions for reasons unclear.
+    // maybe the stdout is weird in that environment.
+  }
 })
 
 //
