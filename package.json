@@ -1,5 +1,5 @@
 {
-  "name": "@optoolco/opkit-node",
+  "name": "@operatortc/opkit-node",
   "version": "1.2.9",
   "description": "",
   "main": "index.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/optoolco/opkit-node.git"
+    "url": "git+https://github.com/operatortc/opkit-node.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/optoolco/opkit-node/issues"
+    "url": "https://github.com/operatortc/opkit-node/issues"
   },
-  "homepage": "https://github.com/optoolco/opkit-node#readme",
+  "homepage": "https://github.com/operatortc/opkit-node#readme",
   "devDependencies": {
     "@types/node": "16.10.2",
     "npm-bin-deps": "1.10.1"
@@ -25,5 +25,9 @@
   },
   "dependencies": {
     "node-fetch": "^2.6.1"
+  },
+  "private": true,
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   }
 }
