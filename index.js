@@ -317,6 +317,13 @@ const api = {
   },
 
   /**
+   * @param {{ window: number, posBar: number, posMenu: number }} o
+   */
+  setMenuItemEnabled (o) {
+    return ipc.request('menuItemEnabled', o)
+  },
+
+  /**
    * @param {{ window: number, value: string }} o
    */
   openExternal (o) {
