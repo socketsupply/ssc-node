@@ -317,7 +317,7 @@ const api = {
   },
 
   /**
-   * @param {{ window: number, posBar: number, posMenu: number }} o
+   * @param {{ window: number, indexMain: number, indexSub: number }} o
    */
   setMenuItemEnabled (o) {
     return ipc.request('menuItemEnabled', o)
