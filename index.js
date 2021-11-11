@@ -352,7 +352,6 @@ const api = {
 
 module.exports = api
 
-console.log('starting opkit-node', process.argv)
 if (process.argv.includes('--webviewFailed')) {
   installWebView()
 }
@@ -365,12 +364,12 @@ async function installWebView () {
   // and install it for them.
   //
 
-  console.log('installWebView() fetch()')
+  // console.log('installWebView() fetch()')
   const res = await fetch('https://go.microsoft.com/fwlink/p/?LinkId=2124703')
 
-  console.log('fetch status', res.status)
+  // console.log('fetch status', res.status)
   if (res.status !== 200) {
-    console.log('attempt to alert()')
+    // console.log('attempt to alert()')
     return api.alert({
       value: 'Could not connect to go.microsoft.com to download required native resources'
     })
@@ -379,13 +378,13 @@ async function installWebView () {
   const tmpDir = os.tmpdir()
   const dest = path.join(tmpDir, 'webview-installer.exe')
 
-  console.log('write res.body to tmp', dest)
+  // console.log('write res.body to tmp', dest)
   await pipeline(res.body, fs.createWriteStream(dest))
-  console.log('spawn tmp exe', dest)
+  // console.log('spawn tmp exe', dest)
   await spawn(dest, [], {
     stdio: 'inherit'
   })
-  console.log('spawn yields')
+  // console.log('spawn yields')
 
   api.restart()
 }
