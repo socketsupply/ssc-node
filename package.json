@@ -26,7 +26,6 @@
   "dependencies": {
     "node-fetch": "^2.6.1"
   },
-  "private": true,
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   }
