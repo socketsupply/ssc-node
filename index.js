@@ -18,6 +18,12 @@ const write = s => {
     throw new Error('invalid write()')
   }
 
+  if (s.length > 256 * 1024) {
+    const len = Math.ceil(s.length / 1024)
+    process.stderr.write('WARNING: Sending large message to webview: ' + len + 'kb\n')
+    process.stderr.write('RAW MESSAGE: ' + s.slice(0, 512) + '...\n')
+  }
+
   return new Promise(resolve =>
     process.stdout.write(s + '\n', resolve)
   )
@@ -152,6 +158,14 @@ async function parse (data) {
   let seq = '0'
   let state = '0'
   let value = ''
+
+  if (data.length > 256 * 1024) {
+    const len = Math.ceil(data.length / 1024)
+    process.stderr.write(
+      'WARNING: Receiving large message from webview: ' + len + 'kb\n'
+    )
+    process.stderr.write('RAW MESSAGE: ' + data.slice(0, 512) + '...\n')
+  }
 
   try {
     const u = new URL(data)
