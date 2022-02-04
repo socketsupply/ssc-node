@@ -13,12 +13,14 @@ const fetch = require('node-fetch')
 const spawn = util.promisify(childProcess.spawn)
 const pipeline = util.promisify(stream.pipeline)
 
+const MAX_MESSAGE_KB = 512 * 1024
+
 const write = s => {
   if (s.includes('\n')) {
     throw new Error('invalid write()')
   }
 
-  if (s.length > 256 * 1024) {
+  if (s.length > MAX_MESSAGE_KB) {
     const len = Math.ceil(s.length / 1024)
     process.stderr.write('WARNING: Sending large message to webview: ' + len + 'kb\n')
     process.stderr.write('RAW MESSAGE: ' + s.slice(0, 512) + '...\n')
@@ -159,7 +161,7 @@ async function parse (data) {
   let state = '0'
   let value = ''
 
-  if (data.length > 256 * 1024) {
+  if (data.length > MAX_MESSAGE_KB) {
     const len = Math.ceil(data.length / 1024)
     process.stderr.write(
       'WARNING: Receiving large message from webview: ' + len + 'kb\n'
