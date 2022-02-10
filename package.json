@@ -1,5 +1,5 @@
 {
-  "name": "@operatortc/opkit-node",
+  "name": "@socketsupply/opkit-node",
   "version": "1.3.5",
   "description": "",
   "main": "index.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/operatortc/opkit-node.git"
+    "url": "git+https://github.com/socketsupply/opkit-node.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/operatortc/opkit-node/issues"
+    "url": "https://github.com/socketsupply/opkit-node/issues"
   },
-  "homepage": "https://github.com/operatortc/opkit-node#readme",
+  "homepage": "https://github.com/socketsupply/opkit-node#readme",
   "devDependencies": {
     "@types/node": "16.10.2",
     "npm-bin-deps": "1.10.1"
