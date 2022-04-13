@@ -112,13 +112,17 @@ ipc.request = async (cmd, opts) => {
 }
 
 ipc.send = async o => {
-  o = JSON.parse(JSON.stringify(o))
+  try {
+    // TODO: use structuredClone instead once we are on node 17+
+    o = JSON.parse(JSON.stringify(o))
+  } catch (err) {
+    console.error(`Cannot encode data to send via IPC:\n${err.message}`)
+    return Promise.reject(err)
+  }
 
   if (typeof o.value === 'object') {
     o.value = JSON.stringify(o.value)
   }
-
-  if (!o.value || !o.value.trim()) return
 
   let s = new URLSearchParams({
     event: o.event,
