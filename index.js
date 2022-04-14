@@ -297,8 +297,8 @@ const api = {
       throw new Error('Menu must have length')
     }
 
-    const menus = menu.match(new RegExp('\\w+:\\n', 'g'))
-    const menuTerminals = menu.match(new RegExp(';', 'g'))
+    const menus = menu.match(/\\w+:\\n/g)
+    const menuTerminals = menu.match(/;/g)
     const delta = menus.length - menuTerminals.length
 
     if ((delta !== 0) && (delta !== -1)) {
@@ -307,8 +307,8 @@ const api = {
 
     const lines = menu.split('\n')
     const e = new Error()
-    const frame = e.stack.split("\n")[2]
-    const callerLineNo = frame.split(":").reverse()[1]
+    const frame = e.stack.split('\n')[2]
+    const callerLineNo = frame.split(':').reverse()[1]
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i]
