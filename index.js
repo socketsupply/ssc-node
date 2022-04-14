@@ -40,7 +40,7 @@ console.log = (...args) => {
 console.error = console.log
 
 process.on('exit', (exitCode) => {
-  const seq = ipc.nextSeq++
+  const seq = String(ipc.nextSeq++)
 
   let value = new URLSearchParams({
     index: '0',
@@ -205,7 +205,7 @@ async function parse (data) {
     resultObj = {
       err: { message: err.message }
     }
-    state = 1
+    state = '1'
   }
 
   if (resultObj === undefined) {
@@ -215,7 +215,7 @@ async function parse (data) {
   try {
     result = JSON.stringify(resultObj)
   } catch (err) {
-    state = 1
+    state = '1'
     result = JSON.stringify({
       err: { message: err.message }
     })
@@ -362,10 +362,11 @@ const api = {
   },
 
   /**
-   * @param {any} o
+   * @param {string} command
+   * @param {any} value
    */
-  receive (o) {
-    console.error('Receive Not Implemented', o)
+  receive (command, value) {
+    console.error(`Receive Not Implemented.\nCommand: ${command}\nValue: ${value}`)
     return { err: new Error('Not Implemented!') }
   }
 }
