@@ -1,6 +1,6 @@
 {
   "name": "@socketsupply/op-node",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -26,8 +26,5 @@
   },
   "dependencies": {
     "node-fetch": "^2.6.1"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
   }
 }
