@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npr standard"
+    "test": "npr standard",
+    "pub": "npm pub && npm publish --registry https://npm.pkg.github.com"
   },
   "repository": {
     "type": "git",
