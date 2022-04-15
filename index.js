@@ -364,6 +364,10 @@ const api = {
     return ipc.request('restart', { })
   },
 
+  heartbeat () {
+    return ipc.request('heartbeat', {})
+  },
+
   /**
    * @param {string} command
    * @param {any} value
