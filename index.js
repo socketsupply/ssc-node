@@ -297,7 +297,10 @@ const api = {
       throw new Error('Menu must have length')
     }
 
-    const menus = menu.match(/\\w+:\\n/g)
+    const menus = menu.match(/\w+:\n/g)
+    if (!menus) {
+      throw new Error('Menu must have a valid format')
+    }
     const menuTerminals = menu.match(/;/g)
     const delta = menus.length - menuTerminals.length
 
