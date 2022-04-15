@@ -291,13 +291,10 @@ const api = {
    */
   setMenu (o) {
     const menu = o.value
-    if (typeof menu !== 'string' || menu.trim().length === 0) {
-      throw new Error('Menu must be a non-empty string')
-    }
 
     // validate the menu
-    if (menu.length === 0) {
-      throw new Error('Menu must have length')
+    if (typeof menu !== 'string' || menu.trim().length === 0) {
+      throw new Error('Menu must be a non-empty string')
     }
 
     const menus = menu.match(/\w+:\n/g)
