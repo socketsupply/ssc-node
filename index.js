@@ -291,6 +291,9 @@ const api = {
    */
   setMenu (o) {
     const menu = o.value
+    if (typeof menu !== 'string' || menu.trim().length === 0) {
+      throw new Error('Menu must be a non-empty string')
+    }
 
     // validate the menu
     if (menu.length === 0) {
@@ -302,7 +305,7 @@ const api = {
       throw new Error('Menu must have a valid format')
     }
     const menuTerminals = menu.match(/;/g)
-    const delta = menus.length - menuTerminals.length
+    const delta = menus.length - (menuTerminals?.length ?? 0)
 
     if ((delta !== 0) && (delta !== -1)) {
       throw new Error(`Expected ${menuTerminals.length} ';', found ${menus}.`)
