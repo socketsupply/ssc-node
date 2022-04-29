@@ -161,13 +161,17 @@ async function handleMessage (data) {
 
 async function receiveOpNode (_command, value) {
   if (value?.method === 'testUncaught') {
-    console.error('Got an uncaught in test', value)
+    const opts = value.arguments[0]
+
+    console.error('Got an uncaught in test', opts)
 
     process.nextTick(() => {
-      throw new Error('FRONTEND TEST UNCAUGHT: ' + value.err.message)
+      throw new Error('FRONTEND TEST UNCAUGHT: ' + opts.err.message)
     })
   } else if (value?.method === 'testConsole') {
-    const args = JSON.parse(value.args)
+    const opts = value.arguments[0]
+
+    const args = JSON.parse(opts.args)
     const firstArg = args[0]
 
     console.log.apply(console, args)
