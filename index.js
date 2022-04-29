@@ -13,6 +13,7 @@ const fetch = require('node-fetch')
 const spawn = util.promisify(childProcess.spawn)
 const pipeline = util.promisify(stream.pipeline)
 
+const AUTO_CLOSE = process.env.AUTO_CLOSE
 const MAX_MESSAGE_KB = 512 * 1024
 
 const write = s => {
@@ -158,11 +159,49 @@ async function handleMessage (data) {
   buf = messages[messages.length - 1]
 }
 
+async function receiveOpNode (_command, value) {
+  if (value?.method === 'testUncaught') {
+    console.error('Got an uncaught in test', value)
+
+    process.nextTick(() => {
+      throw new Error('FRONTEND TEST UNCAUGHT: ' + value.err.message)
+    })
+  } else if (value?.method === 'testConsole') {
+    const args = JSON.parse(value.args)
+    const firstArg = args[0]
+
+    console.log.apply(console, args)
+
+    if (typeof firstArg !== 'string') {
+      // nothing can be done here
+      return {}
+    }
+
+    let exitCode = -1
+    if (firstArg.indexOf('# ok') === 0) {
+      exitCode = 0
+    } else if (firstArg.indexOf('# fail ') === 0) {
+      exitCode = 1
+    }
+
+    if (exitCode !== -1 && AUTO_CLOSE !== 'false') {
+      // wait some time to let logs flush.
+      setTimeout(() => {
+        api.exit({ value: exitCode })
+      }, 50)
+    }
+
+    return {}
+  }
+}
+
 async function parse (data) {
   let cmd = ''
   let index = '0'
   let seq = '0'
   let state = '0'
+
+  /** @type {string | object} */
   let value = ''
 
   if (data.length > MAX_MESSAGE_KB) {
@@ -200,7 +239,11 @@ async function parse (data) {
   let result = ''
 
   try {
-    resultObj = await api.receive(cmd, value)
+    if (value && Reflect.get(value, 'api') === 'op-node') {
+      resultObj = await receiveOpNode(cmd, value)
+    } else {
+      resultObj = await api.receive(cmd, value)
+    }
   } catch (err) {
     resultObj = {
       err: { message: err.message }
