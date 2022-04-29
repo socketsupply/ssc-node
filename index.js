@@ -174,7 +174,7 @@ async function receiveOpNode (_command, value) {
     const args = JSON.parse(opts.args)
     const firstArg = args[0]
 
-    console.log.apply(console, args)
+    console.log(...args)
 
     if (typeof firstArg !== 'string') {
       // nothing can be done here
