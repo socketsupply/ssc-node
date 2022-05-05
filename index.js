@@ -2,16 +2,7 @@
 'use strict'
 
 const util = require('util')
-const stream = require('stream')
 const fs = require('fs')
-const os = require('os')
-const path = require('path')
-const childProcess = require('child_process')
-
-const fetch = require('node-fetch')
-
-const spawn = util.promisify(childProcess.spawn)
-const pipeline = util.promisify(stream.pipeline)
 
 const AUTO_CLOSE = process.env.AUTO_CLOSE
 const MAX_MESSAGE_KB = 512 * 1024
@@ -426,40 +417,3 @@ const api = {
 }
 
 module.exports = api
-
-if (process.argv.includes('--webviewFailed')) {
-  installWebView()
-}
-
-// eslint-disable-next-line
-async function installWebView () {
-  //
-  // this will go away in the near future. WebView2 is a new feature
-  // and we want to be sure the user has it, if they don't, download
-  // and install it for them.
-  //
-
-  // console.log('installWebView() fetch()')
-  const res = await fetch('https://go.microsoft.com/fwlink/p/?LinkId=2124703')
-
-  // console.log('fetch status', res.status)
-  if (res.status !== 200) {
-    // console.log('attempt to alert()')
-    return api.alert({
-      value: 'Could not connect to go.microsoft.com to download required native resources'
-    })
-  }
-
-  const tmpDir = os.tmpdir()
-  const dest = path.join(tmpDir, 'webview-installer.exe')
-
-  // console.log('write res.body to tmp', dest)
-  await pipeline(res.body, fs.createWriteStream(dest))
-  // console.log('spawn tmp exe', dest)
-  await spawn(dest, [], {
-    stdio: 'inherit'
-  })
-  // console.log('spawn yields')
-
-  api.restart()
-}
