@@ -234,7 +234,7 @@ async function parse (data) {
   let result = ''
 
   try {
-    if (value && Reflect.get(value, 'api') === 'op-node') {
+    if (value && Reflect.get(value, 'api') === 'ssc-node') {
       resultObj = await receiveOpNode(cmd, value)
     } else {
       resultObj = await api.receive(cmd, value)
