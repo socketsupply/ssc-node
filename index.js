@@ -7,6 +7,10 @@ const fs = require('fs')
 const AUTO_CLOSE = process.env.AUTO_CLOSE
 const MAX_MESSAGE_KB = 512 * 1024
 
+function isObject (o) {
+  return o && typeof o === 'object' && !Array.isArray(o)
+}
+
 const write = s => {
   if (s.includes('\n')) {
     throw new Error('invalid write()')
@@ -234,7 +238,7 @@ async function parse (data) {
   let result = ''
 
   try {
-    if (value && Reflect.get(value, 'api') === 'ssc-node') {
+    if (isObject(value) && Reflect.get(value, 'api') === 'ssc-node') {
       resultObj = await receiveOpNode(cmd, value)
     } else {
       resultObj = await api.receive(cmd, value)
