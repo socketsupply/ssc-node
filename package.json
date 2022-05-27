@@ -23,8 +23,5 @@
   },
   "binDependencies": {
     "standard": "16.0.3"
-  },
-  "dependencies": {
-    "node-fetch": "^2.6.1"
   }
 }
