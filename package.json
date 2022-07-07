@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npr standard",
+    "test": "standard",
     "pub": "npm pub && npm publish --registry https://npm.pkg.github.com"
   },
   "repository": {
@@ -19,9 +19,6 @@
   "homepage": "https://github.com/socketsupply/ssc-node#readme",
   "devDependencies": {
     "@types/node": "16.10.2",
-    "npm-bin-deps": "1.10.1"
-  },
-  "binDependencies": {
     "standard": "16.0.3"
   }
 }

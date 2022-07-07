@@ -15,5 +15,5 @@ jobs:
         node-version: 16.x
     - name: npm test
       run: |
-        npm i && ./node_modules/.bin/npr which standard
+        npm i
         npm test
