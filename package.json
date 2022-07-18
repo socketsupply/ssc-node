@@ -11,7 +11,7 @@
     "test": "standard index.js",
     "pub": "npm pub && npm publish --registry https://npm.pkg.github.com",
     "build": "esbuild index.js --outfile=index.cjs --platform=node --format=cjs",
-    "prepublish": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
