@@ -1,8 +1,6 @@
 // @ts-check
-'use strict'
-
-const util = require('util')
-const fs = require('fs')
+import { format } from 'util'
+import { writeSync, fsyncSync } from 'fs'
 
 const AUTO_CLOSE = process.env.AUTO_CLOSE
 const MAX_MESSAGE_KB = 512 * 1024
@@ -28,7 +26,7 @@ const write = s => {
 }
 
 console.log = (...args) => {
-  const s = args.map(v => util.format(v)).join(' ')
+  const s = args.map(v => format(v)).join(' ')
   const enc = encodeURIComponent(s)
   // fs.appendFileSync('tmp.log', s + '\n')
   write(`ipc://stdout?value=${enc}`)
@@ -46,9 +44,9 @@ process.on('exit', (exitCode) => {
 
   value = value.replace(/\+/g, '%20')
 
-  fs.writeSync(1, `ipc://exit?${value}\n`)
+  writeSync(1, `ipc://exit?${value}\n`)
   try {
-    fs.fsyncSync(1)
+    fsyncSync(1)
   } catch (_) {
     // fsync(1) can fail in github actions for reasons unclear.
     // maybe the stdout is weird in that environment.
@@ -420,4 +418,4 @@ const api = {
   }
 }
 
-module.exports = api
+export default api
