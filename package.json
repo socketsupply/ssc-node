@@ -1,6 +1,6 @@
 {
   "name": "@socketsupply/ssc-node",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "",
   "exports": {
     "import": "./index.js",
@@ -9,7 +9,7 @@
   "type": "module",
   "scripts": {
     "test": "standard index.js",
-    "publish": "npm publish && npm publish --registry https://npm.pkg.github.com",
+    "publish": "npm pub && npm pub --registry https://npm.pkg.github.com",
     "build": "esbuild index.js --outfile=index.cjs --platform=node --format=cjs",
     "prepublish": "npm run build"
   },
