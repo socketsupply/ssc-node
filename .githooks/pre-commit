@@ -1,4 +1,0 @@
-#!/bin/sh
-
-npm run build
-git add index.cjs
