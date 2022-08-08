@@ -10,5 +10,6 @@ and `stdout`. This module is an optional, higher level adapter for this protocol
 that should make Node.js developers feel more at-home. Check out the [this][1]
 repo for some examples about how to use it.
 
-[0]:https://socket-sdk.dev
+[0]:https://sockets.sh/
 [1]:https://github.com/socketsupply/socket-sdk-examples
+
