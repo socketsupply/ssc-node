@@ -120,7 +120,7 @@ ipc.send = async o => {
 
   let s = new URLSearchParams({
     event: o.event,
-    index: o.window || '0',
+    index: o.window ?? '-1',
     value: o.value
   }).toString()
 
