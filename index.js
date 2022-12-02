@@ -285,35 +285,35 @@ const api = {
    * @param {{ window: number }} o
    */
   show (o) {
-    return ipc.request('show', o)
+    return ipc.request('window.show', o)
   },
 
   /**
    * @param {{ window: number }} o
    */
   hide (o) {
-    return ipc.request('hide', o)
+    return ipc.request('window.hide', o)
   },
 
   /**
    * @param {{ window: number, value: string }} o
    */
   navigate (o) {
-    return ipc.request('navigate', o)
+    return ipc.request('window.navigate', o)
   },
 
   /**
    * @param {{ window: number, value: string }} o
    */
   setTitle (o) {
-    return ipc.request('title', o)
+    return ipc.request('window.setTitle', o)
   },
 
   /**
    * @param {{ window: number, height: number, width: number }} o
    */
   setSize (o) {
-    return ipc.request('size', o)
+    return ipc.request('window.setSize', o)
   },
 
   getScreenSize () {
