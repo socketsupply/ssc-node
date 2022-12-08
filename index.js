@@ -127,7 +127,7 @@ ipc.send = async o => {
 
   s = s.replace(/\+/g, '%20')
 
-  await write(`ipc://send?${s}`)
+  return await write(`ipc://send?${s}`)
 }
 
 process.stdin.resume()
