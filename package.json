@@ -1,5 +1,5 @@
 {
-  "name": "@socketsupply/ssc-node",
+  "name": "@socketsupply/socket-node",
   "version": "1.8.2",
   "description": "",
   "exports": {
@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/socketsupply/ssc-node.git"
+    "url": "git+https://github.com/socketsupply/socket-node.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/socketsupply/ssc-node/issues"
+    "url": "https://github.com/socketsupply/socket-node/issues"
   },
-  "homepage": "https://github.com/socketsupply/ssc-node#readme",
+  "homepage": "https://github.com/socketsupply/socket-node#readme",
   "devDependencies": {
     "@types/node": "16.10.2",
     "esbuild": "0.14.49",
