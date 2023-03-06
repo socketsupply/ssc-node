@@ -55,7 +55,7 @@ class API {
   //
   #checkVersion (major, minor, patch) {
     if (major < API.#minimalMajorVersion || minor < API.#minimalMinorVersion || patch < API.#minimalPatchVersion) {
-      throw new Error(`socket-node requires at least version 0.1.0, got ${major}.${minor}.${patch}`)
+      throw new Error(`socket-node requires at least version ${API.#minimalMajorVersion}.${API.#minimalMinorVersion}.${API.#minimalPatchVersion}, got ${major}.${minor}.${patch}`)
     }
   }
 
