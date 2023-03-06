@@ -26,6 +26,6 @@
   "devDependencies": {
     "@types/node": "16.10.2",
     "esbuild": "0.14.49",
-    "standard": "16.0.3"
+    "standard": "17.0.0"
   }
 }
